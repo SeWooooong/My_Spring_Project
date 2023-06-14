@@ -17,8 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,8 +37,8 @@ jobs:
         arguments: clean build -x test
         
    # Docker
-    - name: Docker - Setup Docker
-      uses: docker/setup-buildx-action@v2
+    - name: 도커 이미지 빌드 # (2)
+      run: docker build -t parksewoong/test:latest .
 
     - name: Docker - Login to DockerHub
       uses: docker/login-action@v2
@@ -47,26 +46,17 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         
-    - name: Docker - Build and push
-      uses: docker/build-push-action@v3
+    - name: Docker Hub 퍼블리시 # (4)
+      run: docker push parksewoong/test:latest
+
+    - name: Depoly in AWS ec2
+      uses: appleboy/ssh-action@master
       with:
-        context: .
-        push: true
-        tags: parksewoong/test:latest
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Depoly in AWS ec2 
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            sudo docker stop $(sudo docker ps -a -q) 
-            sudo docker rm $(sudo docker ps -a -q) 
-            sudo docker pull parksewoong/test:latest
-            sudo docker run -d -p 8080:8080 --name test-server parksewoong/test:latest
+         host: ${{ secrets.EC2_HOST }}
+         username: ${{ secrets.SSH_USERNAME }}
+         key: ${{ secrets.SSH_KEY }}
+         script: |
+           sudo docker stop $(sudo docker ps -a -q) 
+           sudo docker rm $(sudo docker ps -a -q) 
+           sudo docker pull parksewoong/test:latest
+           sudo docker run -d -p 8080:8080 --name test-server parksewoong/test:latest
