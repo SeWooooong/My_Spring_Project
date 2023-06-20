@@ -28,29 +28,31 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-      # (3) 서브 모듈 접근하기
+      # 서브 모듈 접근하기
     - name: Checkout repo
       uses: actions/checkout@v3
       with:
         token: ${{ secrets.TOKEN }}
         submodules: true
 
-      # (4) 서브 모듈 변경 점 있으면 update
+      # 서브 모듈 변경 점 있으면 update
     - name: Git Sumbodule Update
       run: |
         git pull --recurse-submodules
         git submodule update --remote --recursive    
 
+      # gradlew 권한 변경
     - name: Grant execute permission for gradlew
       run : chmod +x gradlew
-        
+
+      # 빌드하기 (test부분은 빌드 안함)
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: clean build -x test
         
    # Docker
-    - name: 도커 이미지 빌드 # (2)
+    - name: 도커 이미지 빌드
       run: docker build -t parksewoong/test:latest .
 
     - name: Docker - Login to DockerHub
@@ -59,7 +61,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         
-    - name: Docker Hub 퍼블리시 # (4)
+    - name: Docker Hub 퍼블리시
       run: docker push parksewoong/test:latest
 
     - name: Depoly in AWS ec2

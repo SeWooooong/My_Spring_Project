@@ -38,3 +38,5 @@ out/
 
 ### 서브모듈 ###
 /src/main/resources/application-prod.yml
+
+/src/test/resources/application.yml
