@@ -1,7 +1,6 @@
 package com.example.my_spring_project.article;
 
-import com.example.my_spring_project.article.dto.ArticleRequestDto;
-import com.example.my_spring_project.article.dto.ArticleResponseDto;
+import com.example.my_spring_project.article.dto.ArticleResponseDto.ArticleSelectDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +22,9 @@ public class ArticleController {
     }
 
     @GetMapping("/api/articles")
-    public ResponseEntity<List<ArticleResponseDto>> findAllArticles() {
-        List<ArticleResponseDto> articles = articleService.findAll().stream()
-                .map(ArticleResponseDto::new)
+    public ResponseEntity<List<ArticleSelectDto>> findAllArticles() {
+        List<ArticleSelectDto> articles = articleService.findAll().stream()
+                .map(ArticleSelectDto::new)
                 .toList();
 
         return ResponseEntity.ok()
@@ -33,11 +32,11 @@ public class ArticleController {
     }
 
     @GetMapping("/api/articles/{id}")
-    public ResponseEntity<ArticleResponseDto> findArticle(@PathVariable long id) {
+    public ResponseEntity<ArticleSelectDto> findArticle(@PathVariable long id) {
         Article article = articleService.findById(id);
 
         return ResponseEntity.ok()
-                .body(new ArticleResponseDto(article));
+                .body(new ArticleSelectDto(article));
     }
 
     @DeleteMapping("/api/articles/{id}")
