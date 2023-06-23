@@ -1,5 +1,7 @@
-package com.example.my_spring_project.article;
+package com.example.my_spring_project.article.controller;
 
+import com.example.my_spring_project.article.Article;
+import com.example.my_spring_project.article.ArticleService;
 import com.example.my_spring_project.article.dto.ArticleResponseDto.ArticleSelectDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
