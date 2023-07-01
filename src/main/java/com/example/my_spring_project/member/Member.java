@@ -26,15 +26,25 @@ public class Member extends BaseTimeEntity implements UserDetails  {
     @Column(name="password")
     private String password;
 
+    @Column(name="nickname", unique = true)
+    private String nickname;
+
     @Builder
-    public Member(String email, String password, String auth){
+    public Member(String email, String password, String nickname){
         this.email = email;
         this.password = password;
+        this.nickname = nickname;
+    }
+
+    // 사용자 이름 변경
+    public Member update(String nickname){
+        this.nickname = nickname;
+        return this;
     }
 
     @Override // 권한 반환
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("member"));
+        return List.of(new SimpleGrantedAuthority("user"));
     }
 
     @Override

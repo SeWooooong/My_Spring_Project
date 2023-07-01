@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import org.springframework.context.annotation.Bean;
 
 
 @Entity
@@ -22,6 +22,16 @@ public class Article extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String content;
+
+    @Column(name = "author", nullable = false)
+    private String author;
+
+    @Builder
+    public Article(String author, String title, String content) {
+        this.author = author;
+        this.title = title;
+        this.content = content;
+    }
 
     @Builder
     public Article(String title, String content){

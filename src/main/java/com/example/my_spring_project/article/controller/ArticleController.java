@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.my_spring_project.article.dto.ArticleRequestDto.ArticleinsertDto;
 import com.example.my_spring_project.article.dto.ArticleRequestDto.ArticleUpdateDto;
+
+import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,8 +19,8 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping("/api/articles")
-    public ResponseEntity<Article> addArticle(@RequestBody ArticleinsertDto request){
-        Article savedArticle = articleService.save(request);
+    public ResponseEntity<Article> addArticle(@RequestBody ArticleinsertDto request, Principal principal){
+        Article savedArticle = articleService.save(request, principal.getName());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedArticle);
     }
