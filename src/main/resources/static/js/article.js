@@ -41,7 +41,7 @@ if (modifyButton) {
             location.replace(`/articles/${id}`);
         }
 
-        httpRequest('PUT',`/api/articles/${id}`, body, success, fail);
+        httpRequest('PATCH',`/api/articles/${id}`, body, success, fail);
     });
 }
 
